@@ -205,7 +205,7 @@ export default function ProviderDashboard() {
     return `Showing ${from}-${to} of ${total}`;
   }, [viewItems.length, page, limit, total]);
 
-  const canBidTextTitle = "Bidding is available after KYC approval";
+  // const canBidTextTitle = "Bidding is available after KYC approval";
 
   return (
     <div className="container py-8 space-y-8">

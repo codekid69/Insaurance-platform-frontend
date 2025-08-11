@@ -414,16 +414,16 @@ function formatMoney(amount: number, currency: string) {
 function formatDateTime(iso: string) {
   try { return new Date(iso).toLocaleString(); } catch { return iso; }
 }
-function toLocalDateTimeInput(date?: Date) {
-  if (!date) return "";
-  const pad = (n: number) => n.toString().padStart(2, "0");
-  const yyyy = date.getFullYear();
-  const mm = pad(date.getMonth() + 1);
-  const dd = pad(date.getDate());
-  const hh = pad(date.getHours());
-  const mi = pad(date.getMinutes());
-  return `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
-}
+// function toLocalDateTimeInput(date?: Date) {
+//   if (!date) return "";
+//   const pad = (n: number) => n.toString().padStart(2, "0");
+//   const yyyy = date.getFullYear();
+//   const mm = pad(date.getMonth() + 1);
+//   const dd = pad(date.getDate());
+//   const hh = pad(date.getHours());
+//   const mi = pad(date.getMinutes());
+//   return `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
+// }
 function toLocalDateInput(date?: Date) {
   if (!date) return "";
   const pad = (n: number) => n.toString().padStart(2, "0");
