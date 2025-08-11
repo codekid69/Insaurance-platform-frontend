@@ -1,4 +1,5 @@
-import { Routes, Route } from "react-router-dom";
+// App.tsx
+import { Routes, Route, Link } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -7,8 +8,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ProviderDashboard from "./pages/ProviderDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import RequestDetails from "./pages/RequestDetails";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+
+import { motion, type Variants } from "framer-motion";
+import type { ElementType } from "react";
 import {
   Shield,
   Handshake,
@@ -21,36 +23,89 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-const fadeUp = {
+/* --- Motion: v11-safe variants (no string eases) --- */
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.16, 1, 0.3, 1], // easeOut cubic-bezier
+    },
+  },
 };
+
+/* --- Types for icon-driven cards --- */
+type Feature = { icon: ElementType; title: string; desc: string };
+type Step = { icon: ElementType; title: string; desc: string };
+
+/* --- Data (icons typed) --- */
+const features: Feature[] = [
+  { icon: Shield,   title: "Smart RFPs",          desc: "Create structured requests, set target coverage, deadlines, and compliance guardrails." },
+  { icon: Handshake,title: "Consortium Builder",  desc: "Compose multi-carrier deals; allocate coverage and premiums transparently." },
+  { icon: Layers,   title: "Deal Finalization",   desc: "One-click finalize with auditable snapshots and automated notifications." },
+  { icon: Users,    title: "Provider Network",    desc: "Discover verified providers, track bids, and manage relationships." },
+  { icon: BarChart3,title: "Coverage Analytics",  desc: "Live coverage progress, premium insights, and bid competitiveness." },
+  { icon: Lock,     title: "Secure Messaging",    desc: "Encrypted, role-based messaging between companies and providers." },
+  { icon: Building2,title: "Enterprise Controls", desc: "Org roles, approval flows, and exportable audit trails." },
+  { icon: Clock,    title: "Faster Time-to-Bind", desc: "Collapse underwriting cycles with guided workflows and automation." },
+];
+
+const steps: Step[] = [
+  { icon: Building2, title: "Post Request",      desc: "Define risk summary, target coverage %, timelines, and constraints." },
+  { icon: Handshake, title: "Receive & Compose", desc: "Providers bid; you assemble a consortium and negotiate terms." },
+  { icon: Shield,    title: "Finalize & Track",  desc: "Bind the deal, notify winners, and monitor coverage in real time." },
+];
+
 export default function App() {
   return (
     <div className="min-h-screen">
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        <Route path="/provider" element={<ProtectedRoute roles={["provider"]}><ProviderDashboard /></ProtectedRoute>} />
-        <Route path="/admin" element={<ProtectedRoute roles={["admin"]}><AdminDashboard /></ProtectedRoute>} />
+        <Route
+          path="/provider"
+          element={
+            <ProtectedRoute roles={["provider"]}>
+              <ProviderDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute roles={["admin"]}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/requests/:id"
-          element={<ProtectedRoute roles={["company"]}><RequestDetails /></ProtectedRoute>}
+          element={
+            <ProtectedRoute roles={["company"]}>
+              <RequestDetails />
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/company"
-          element={<ProtectedRoute roles={["company"]}><CompanyDashboard /></ProtectedRoute>}
+          element={
+            <ProtectedRoute roles={["company"]}>
+              <CompanyDashboard />
+            </ProtectedRoute>
+          }
         />
-
-        {/* we’ll add /provider and /admin next */}
       </Routes>
     </div>
   );
 }
 
+/* ---------------- Home ---------------- */
 function Home() {
   return (
     <main className="relative min-h-[100dvh] overflow-hidden bg-gradient-to-b from-white to-slate-50 dark:from-slate-950 dark:to-slate-900">
@@ -169,7 +224,7 @@ function Home() {
         </motion.div>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((f, i) => (
+          {features.map((f) => (
             <motion.div
               key={f.title}
               variants={fadeUp}
@@ -196,10 +251,7 @@ function Home() {
       </section>
 
       {/* How it works */}
-      <section
-        id="how-it-works"
-        className="container relative z-10 px-4 pb-20 md:pb-24"
-      >
+      <section id="how-it-works" className="container relative z-10 px-4 pb-20 md:pb-24">
         <motion.h2
           variants={fadeUp}
           initial="hidden"
@@ -243,8 +295,7 @@ function Home() {
               Ready to operationalize smarter coverage?
             </h3>
             <p className="mx-auto mt-2 max-w-2xl text-slate-600 dark:text-slate-300">
-              Spin up your account, invite providers, and finalize consortia in
-              days—not months.
+              Spin up your account, invite providers, and finalize consortia in days—not months.
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <Link
@@ -266,64 +317,3 @@ function Home() {
     </main>
   );
 }
-
-const features = [
-  {
-    icon: Shield,
-    title: "Smart RFPs",
-    desc: "Create structured requests, set target coverage, deadlines, and compliance guardrails.",
-  },
-  {
-    icon: Handshake,
-    title: "Consortium Builder",
-    desc: "Compose multi-carrier deals; allocate coverage and premiums transparently.",
-  },
-  {
-    icon: Layers,
-    title: "Deal Finalization",
-    desc: "One-click finalize with auditable snapshots and automated notifications.",
-  },
-  {
-    icon: Users,
-    title: "Provider Network",
-    desc: "Discover verified providers, track bids, and manage relationships.",
-  },
-  {
-    icon: BarChart3,
-    title: "Coverage Analytics",
-    desc: "Live coverage progress, premium insights, and bid competitiveness.",
-  },
-  {
-    icon: Lock,
-    title: "Secure Messaging",
-    desc: "Encrypted, role-based messaging between companies and providers.",
-  },
-  {
-    icon: Building2,
-    title: "Enterprise Controls",
-    desc: "Org roles, approval flows, and exportable audit trails.",
-  },
-  {
-    icon: Clock,
-    title: "Faster Time-to-Bind",
-    desc: "Collapse underwriting cycles with guided workflows and automation.",
-  },
-];
-
-const steps = [
-  {
-    icon: Building2,
-    title: "Post Request",
-    desc: "Define risk summary, target coverage %, timelines, and constraints.",
-  },
-  {
-    icon: Handshake,
-    title: "Receive & Compose",
-    desc: "Providers bid; you assemble a consortium and negotiate terms.",
-  },
-  {
-    icon: Shield,
-    title: "Finalize & Track",
-    desc: "Bind the deal, notify winners, and monitor coverage in real time.",
-  },
-];
